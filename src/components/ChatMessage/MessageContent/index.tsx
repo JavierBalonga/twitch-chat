@@ -31,9 +31,9 @@ const MessageContent = ({ content, emotes }: ParsedMessageContentProps) => {
   let currentPosition = 0;
   emotesArray.forEach(({ id, start, end }) => {
     parsedMessage.push(
-      <Fragment key={parsedMessage.length + 1}>
+      <span key={parsedMessage.length + 1}>
         {content.slice(currentPosition, start)}
-      </Fragment>
+      </span>
     );
     parsedMessage.push(
       <img

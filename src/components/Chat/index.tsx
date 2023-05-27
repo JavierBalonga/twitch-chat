@@ -5,11 +5,23 @@ const Chat = () => {
   const messages = useTwitchMessages();
 
   return (
-    <div className="container mx-auto max-w-md grow flex flex-col gap-4 justify-end">
-      {messages.map((message) => (
-        <ChatMessage key={message.id} message={message} />
-      ))}
-    </div>
+    <article className="container mx-auto max-w-md grow flex flex-col justify-end">
+      {messages.map((message, i) => {
+        const previousMessage = messages[i - 1];
+        const nextMessage = messages[i + 1];
+        const isUsersFirstMessage =
+          previousMessage?.username !== message.username;
+        const isUsersLastMessage = nextMessage?.username !== message.username;
+        return (
+          <ChatMessage
+            key={message.id}
+            message={message}
+            isUsersFirstMessage={isUsersFirstMessage}
+            isUsersLastMessage={isUsersLastMessage}
+          />
+        );
+      })}
+    </article>
   );
 };
 

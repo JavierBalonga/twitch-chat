@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import useMessagesStore from "../../contexts/messagesStore";
 import tmi from "tmi.js";
+import randomColor from "../../utils/randomColor";
 
 const { VITE_ENABLE_DEBUG } = import.meta.env;
 
-const TIME_OF_PERSISTENCE = 40000;
+const TIME_OF_PERSISTENCE = 60000;
 
 const useTwitchMessages = () => {
   const messages = useMessagesStore((state) => state.messages);
@@ -20,21 +21,15 @@ const useTwitchMessages = () => {
     twitchClient.connect().catch(console.error);
 
     twitchClient.on("message", (_channel, tags, message, self) => {
-      const {
-        id,
-        username,
-        "display-name": displayName,
-        color = "#000000",
-        emotes = {},
-      } = tags;
+      const { id, username, "display-name": displayName, color, emotes } = tags;
       if (self || !id || !username) return;
 
       addMessage({
         id,
         displayName,
         username,
-        color,
-        emotes,
+        color: color || randomColor(username),
+        emotes: emotes || {},
         content: message,
       });
 

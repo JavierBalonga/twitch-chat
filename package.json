@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "clsx": "^1.2.1",
+    "color": "^4.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tmi.js": "^1.8.5",
     "zustand": "^4.3.8"
   },
   "devDependencies": {
+    "@types/color": "^3.0.3",
     "@types/node": "^20.2.3",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",

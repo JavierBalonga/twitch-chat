@@ -37,19 +37,3 @@ const useMessagesStore = create<MessagesState & MessagesMethods>((set) => ({
 }));
 
 export default useMessagesStore;
-
-// import { useAtom } from 'jotai'
-// import { atomWithStorage } from 'jotai/utils'
-
-// const darkModeAtom = atomWithStorage('darkMode', false)
-
-// const Page = () => {
-//   const [darkMode, setDarkMode] = useAtom(darkModeAtom)
-
-//   return (
-//     <>
-//       <h1>Welcome to {darkMode ? 'dark' : 'light'} mode!</h1>
-//       <button onClick={() => setDarkMode(!darkMode)}>toggle theme</button>
-//     </>
-//   )
-// }

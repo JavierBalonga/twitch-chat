@@ -18,15 +18,6 @@ const ChatMessage = ({
 }: ChatMessageProps) => {
   const userColor = Color(message.color);
 
-  // TODO averiguar porque el color #000000 no se le aumenta el brillo
-  console.log({
-    color: message.color,
-    resultColor:
-      userColor.luminosity() < MINIMUM_LIGHTNESS
-        ? userColor.lighten(MINIMUM_LIGHTNESS).hex()
-        : userColor.hex(),
-  });
-
   return (
     <div className={clsx("flex flex-col gap-1", isUsersFirstMessage && "mt-4")}>
       {isUsersFirstMessage && (

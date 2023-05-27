@@ -10,6 +10,8 @@ jobs:
   deploy:
     name: Deploy
     runs-on: [self-hosted]
+    permissions:
+      contents: write
     container:
       image: node:16
 

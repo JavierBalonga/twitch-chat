@@ -16,28 +16,22 @@ const ChatMessage = ({
   isUsersFirstMessage = false,
   isUsersLastMessage = false,
 }: ChatMessageProps) => {
-  const userColor = Color(message.color);
-
+  let userColor = Color(message.color);
+  if (userColor.luminosity() < MINIMUM_LIGHTNESS) {
+    userColor = userColor.lighten(MINIMUM_LIGHTNESS);
+  }
   return (
     <div className={clsx("flex flex-col gap-1", isUsersFirstMessage && "mt-4")}>
       {isUsersFirstMessage && (
-        <div className="self-start bg-background/90 px-2 py-1 rounded-lg">
-          <h6
-            className="text-xl"
-            style={{
-              color:
-                userColor.luminosity() < MINIMUM_LIGHTNESS
-                  ? userColor.lighten(MINIMUM_LIGHTNESS).hex()
-                  : userColor.hex(),
-            }}
-          >
+        <div className="self-start bg-backdrop px-2 py-1 rounded-lg">
+          <h6 className="text-xl" style={{ color: userColor.hex() }}>
             {message.displayName || message.username}
           </h6>
         </div>
       )}
       <div
         className={clsx(
-          "px-6 bg-background text-primary",
+          "px-6 bg-background text-primary break-all",
           isUsersFirstMessage && "rounded-tr-3xl rounded-tl-none pt-3",
           isUsersLastMessage && "rounded-b-3xl pb-3"
         )}

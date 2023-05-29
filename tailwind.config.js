@@ -12,6 +12,7 @@ export default {
         // colores de ERU
         // #e6a06f #9e9c71 #5e8271 #33454e #242739
         background: "#242739",
+        backdrop: "#242739E6",
         primary: "#e6a06f",
       },
     },

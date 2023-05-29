@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import { Emotes } from "../../../types/Message";
 
 export interface ParsedMessageContentProps {
@@ -31,14 +31,14 @@ const MessageContent = ({ content, emotes }: ParsedMessageContentProps) => {
   let currentPosition = 0;
   emotesArray.forEach(({ id, start, end }) => {
     parsedMessage.push(
-      <span key={parsedMessage.length + 1}>
+      <Fragment key={parsedMessage.length + 1}>
         {content.slice(currentPosition, start)}
-      </span>
+      </Fragment>
     );
     parsedMessage.push(
       <img
         key={parsedMessage.length + 1}
-        className="h-[28px]"
+        className="inline h-[28px]"
         src={`https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0`}
         alt={content.slice(start, end)}
       />
@@ -48,11 +48,7 @@ const MessageContent = ({ content, emotes }: ParsedMessageContentProps) => {
 
   parsedMessage.push(content.slice(currentPosition));
 
-  return (
-    <p className="text-2xl flex flex-row wrap items-center gap-2">
-      {parsedMessage}
-    </p>
-  );
+  return <p className="text-2xl">{parsedMessage}</p>;
 };
 
 export default MessageContent;

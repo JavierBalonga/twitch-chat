@@ -5,7 +5,7 @@ const Chat = () => {
   const messages = useTwitchMessages();
 
   return (
-    <article className="container mx-auto max-w-md grow flex flex-col justify-end">
+    <article className="container max-w-3xl grow flex flex-col justify-end absolute bottom-8 px-8 py-4">
       {messages.map((message, i) => {
         const previousMessage = messages[i - 1];
         const nextMessage = messages[i + 1];

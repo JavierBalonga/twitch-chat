@@ -1,9 +1,9 @@
-import { Emotes } from "../../../types/Message";
 import ReactMarkdown from "react-markdown";
 import TextComponent from "./TextComponent";
 import { EmotesContextProvider } from "./EmotesContext";
 import ImgComponent from "./ImgComponent";
 import CodeComponent from "./CodeComponent";
+import { Emotes } from "../../../contexts/TwitchResourcesProvider/messagesStore";
 
 export interface ParsedMessageContentProps {
   content: string;

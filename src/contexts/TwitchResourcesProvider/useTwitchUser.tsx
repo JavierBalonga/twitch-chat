@@ -26,20 +26,24 @@ export interface useTwitchChannelUserOptions {
 const useTwitchUser = ({ username }: useTwitchChannelUserOptions) => {
   const twitchAuth = useTwitchAuth();
   return useQuery({
-    queryKey: "twitch-channel-user",
+    queryKey: `twitch-channel-user-${username}`,
     enabled: twitchAuth.isAuthenticated && Boolean(twitchAuth.accessToken),
+    staleTime: Infinity,
     queryFn: async () => {
       if (!twitchAuth.accessToken) {
         throw new Error("No Twitch access token found");
       }
-      const { data } = await twitchApi.get("/users", {
-        headers: {
-          Authorization: `Bearer ${twitchAuth.accessToken}`,
-        },
-        params: {
-          login: username,
-        },
-      });
+      const { data } = await twitchApi.get<TwitchChannelUserResponse>(
+        "/users",
+        {
+          headers: {
+            Authorization: `Bearer ${twitchAuth.accessToken}`,
+          },
+          params: {
+            login: username,
+          },
+        }
+      );
       return data.data[0];
     },
   });

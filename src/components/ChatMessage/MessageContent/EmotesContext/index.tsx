@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo } from "react";
-import { Emotes } from "../../../../contexts/messagesStore";
+import { Emotes } from "../../../../contexts/TwitchResourcesProvider/messagesStore";
 
 export type EmotesDictionary = {
   [name: string]: string | undefined;

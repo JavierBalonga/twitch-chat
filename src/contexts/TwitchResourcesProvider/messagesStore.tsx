@@ -16,10 +16,15 @@ export interface Message {
   color: string;
   content: string;
   emotes: Emotes;
+  badges: Badges;
 }
 
 export interface Emotes {
   [id: string]: string[];
+}
+
+export interface Badges {
+  [name: string]: string | undefined;
 }
 
 const useMessagesStore = create<MessagesState & MessagesMethods>((set) => ({

@@ -22,22 +22,19 @@ const ChatMessage = ({
   const { data: twitchUserProfile } = useTwitchUser({
     username: message.username,
   });
-  const profileImageUrl = twitchUserProfile?.profile_image_url;
-  let userColor = Color(message.color);
-  if (userColor.luminosity() < MINIMUM_LIGHTNESS) {
-    userColor = userColor.lighten(MINIMUM_LIGHTNESS);
-  }
+  const messageColor = Color(message.color);
+
   return (
     <div className={clsx("flex gap-3 ", isUsersFirstMessage && "mt-4")}>
-      {isUsersFirstMessage && profileImageUrl ? (
-        <img
-          className="h-[50px] rounded-full"
-          src={profileImageUrl}
-          alt={message.username}
-        />
-      ) : (
-        <div className="w-[50px]" />
-      )}
+      <div className="w-[50px]">
+        {isUsersFirstMessage && twitchUserProfile?.profile_image_url && (
+          <img
+            className="w-full rounded-full"
+            src={twitchUserProfile.profile_image_url}
+            alt={message.username}
+          />
+        )}
+      </div>
       <div className="grow flex flex-col gap-1">
         {isUsersFirstMessage && (
           <div className="self-start bg-backdrop px-2 py-1 rounded-lg flex items-center gap-1">
@@ -55,7 +52,15 @@ const ChatMessage = ({
                   />
                 );
               })}
-            <h6 className="text-xl" style={{ color: userColor.hex() }}>
+            <h6
+              className="text-xl"
+              style={{
+                color:
+                  messageColor.luminosity() < MINIMUM_LIGHTNESS
+                    ? messageColor.lighten(MINIMUM_LIGHTNESS).hex()
+                    : messageColor.hex(),
+              }}
+            >
               {message.displayName || message.username}
             </h6>
           </div>

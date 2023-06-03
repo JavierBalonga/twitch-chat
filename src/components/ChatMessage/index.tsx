@@ -26,7 +26,7 @@ const ChatMessage = ({
 
   return (
     <div className={clsx("flex gap-3 ", isUsersFirstMessage && "mt-4")}>
-      <div className="w-[50px]">
+      <div className="flex-shrink-0 w-[50px]">
         {isUsersFirstMessage && twitchUserProfile?.profile_image_url && (
           <img
             className="w-full rounded-full"

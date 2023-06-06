@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import clsx from "clsx";
 import MessageContent from "./MessageContent";
 import Color from "color";
@@ -5,7 +6,8 @@ import { Message } from "../../contexts/TwitchResourcesProvider/messagesStore";
 import { useTwitchResources } from "../../contexts/TwitchResourcesProvider";
 import useTwitchUser from "../../contexts/TwitchResourcesProvider/useTwitchUser";
 
-const MINIMUM_LIGHTNESS = 0.5;
+const BACKDROP_COLOR = "#242739";
+const MINIMUM_CONTRAST = 4;
 
 export interface ChatMessageProps {
   message: Message;
@@ -22,7 +24,21 @@ const ChatMessage = ({
   const { data: twitchUserProfile } = useTwitchUser({
     username: message.username,
   });
-  const messageColor = Color(message.color);
+  const messageColor = useMemo(() => {
+    const backdropColor = Color(BACKDROP_COLOR);
+    let color = Color(message.color);
+    let index = 0;
+    while (backdropColor.contrast(color) < MINIMUM_CONTRAST) {
+      if (color.saturationl() < 100) {
+        color = color.saturationl(Math.round(color.saturationl()) + 1);
+      } else if (color.lightness() < 255) {
+        color = color.lightness(Math.round(color.lightness()) + 1);
+      }
+      if (index === 510) break;
+      index++;
+    }
+    return color.hex();
+  }, [message.color]);
 
   return (
     <div className={clsx("flex gap-3 ", isUsersFirstMessage && "mt-4")}>
@@ -37,7 +53,10 @@ const ChatMessage = ({
       </div>
       <div className="grow flex flex-col gap-1">
         {isUsersFirstMessage && (
-          <div className="self-start bg-backdrop px-2 py-1 rounded-lg flex items-center gap-1">
+          <div
+            className="self-start px-2 py-1 rounded-lg flex items-center gap-1"
+            style={{ backgroundColor: BACKDROP_COLOR }}
+          >
             {globalBadges &&
               Object.entries(message.badges).map(([name, version]) => {
                 if (!version) return null;
@@ -52,15 +71,7 @@ const ChatMessage = ({
                   />
                 );
               })}
-            <h6
-              className="text-xl"
-              style={{
-                color:
-                  messageColor.luminosity() < MINIMUM_LIGHTNESS
-                    ? messageColor.lighten(MINIMUM_LIGHTNESS).hex()
-                    : messageColor.hex(),
-              }}
-            >
+            <h6 className="text-xl" style={{ color: messageColor }}>
               {message.displayName || message.username}
             </h6>
           </div>

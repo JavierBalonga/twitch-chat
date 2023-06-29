@@ -4,4 +4,4 @@ Se trata de una herramienta que permite renderizar el chat de twitch de un canal
 
 ---
 
-Hice este Proyecto en vivo, puedes venir a ver que estoy haciendo ahora en [Twitch](https://www.twitch.tv/metalit0)
+Hice este Proyecto en vivo, puedes venir a ver que estoy haciendo ahora en [Twitch](https://www.twitch.tv/metalitodev)

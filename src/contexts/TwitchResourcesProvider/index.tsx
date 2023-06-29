@@ -5,7 +5,7 @@ import useTwitchGlobalBadges, {
 import useTwitchMessages from "./useTwitchChannelMessages";
 import { Message } from "./messagesStore";
 
-const CHANNEL_NAME = "metalit0";
+const CHANNEL_NAME = "metalitodev";
 
 export interface TwitchResourcesContext {
   messages: Message[];

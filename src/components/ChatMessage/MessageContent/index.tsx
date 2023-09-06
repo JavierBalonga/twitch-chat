@@ -1,9 +1,9 @@
-import ReactMarkdown from "react-markdown";
-import TextComponent from "./TextComponent";
-import { EmotesContextProvider } from "./EmotesContext";
-import ImgComponent from "./ImgComponent";
-import CodeComponent from "./CodeComponent";
 import { Emotes } from "../../../contexts/TwitchResourcesProvider/messagesStore";
+import { Fragment, useMemo } from "react";
+
+export type EmotesDictionary = {
+  [name: string]: string | undefined;
+};
 
 export interface ParsedMessageContentProps {
   content: string;
@@ -11,26 +11,35 @@ export interface ParsedMessageContentProps {
 }
 
 const MessageContent = ({ content, emotes }: ParsedMessageContentProps) => {
+  const emotesDictionary = useMemo(() => {
+    const emotesDictionary: EmotesDictionary = {};
+
+    Object.entries(emotes).forEach(([id, rawPositions]) => {
+      const [start, end] = rawPositions[0].split("-");
+      const name = content.slice(Number(start), Number(end) + 1);
+      emotesDictionary[name] = id;
+    });
+
+    return emotesDictionary;
+  }, [emotes, content]);
+
   return (
-    <EmotesContextProvider emotes={emotes} content={content}>
-      <div className="text-2xl">
-        <ReactMarkdown
-          components={{
-            h1: TextComponent,
-            h2: TextComponent,
-            h3: TextComponent,
-            h4: TextComponent,
-            h5: TextComponent,
-            h6: TextComponent,
-            p: TextComponent,
-            img: ImgComponent,
-            code: CodeComponent,
-          }}
-        >
-          {content}
-        </ReactMarkdown>
-      </div>
-    </EmotesContextProvider>
+    <div className="text-2xl">
+      {content.split(" ").map((word, i) => {
+        const emoteId = emotesDictionary[word];
+        if (emoteId) {
+          return (
+            <img
+              key={i}
+              className="inline h-[28px]"
+              src={`https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/2.0`}
+              alt={word}
+            />
+          );
+        }
+        return <Fragment key={i}> {word} </Fragment>;
+      })}
+    </div>
   );
 };
 

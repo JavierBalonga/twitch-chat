@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { useTwitchAuth } from "../../contexts/TwitchAuthProvider";
 import twitchApi from "./twitchApi";
+import { AxiosError } from "axios";
 
 export interface TwitchChannelUserResponse {
   data: TwitchUser[];
@@ -30,21 +31,31 @@ const useTwitchUser = ({ username }: useTwitchChannelUserOptions) => {
     enabled: twitchAuth.isAuthenticated && Boolean(twitchAuth.accessToken),
     staleTime: Infinity,
     queryFn: async () => {
-      if (!twitchAuth.accessToken) {
-        throw new Error("No Twitch access token found");
-      }
-      const { data } = await twitchApi.get<TwitchChannelUserResponse>(
-        "/users",
-        {
-          headers: {
-            Authorization: `Bearer ${twitchAuth.accessToken}`,
-          },
-          params: {
-            login: username,
-          },
+      try {
+        if (!twitchAuth.accessToken) {
+          throw new Error("No Twitch access token found");
         }
-      );
-      return data.data[0];
+        const { data } = await twitchApi.get<TwitchChannelUserResponse>(
+          "/users",
+          {
+            headers: {
+              Authorization: `Bearer ${twitchAuth.accessToken}`,
+            },
+            params: {
+              login: username,
+            },
+          }
+        );
+        return data.data[0];
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status === 401) {
+            twitchAuth.logout();
+            twitchAuth.goToLogin();
+          }
+        }
+        throw error;
+      }
     },
   });
 };

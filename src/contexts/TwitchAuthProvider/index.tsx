@@ -16,6 +16,7 @@ export interface TwitchAuthContext
   error: Error | null;
   isAuthenticated: boolean;
   goToLogin: () => void;
+  logout: () => void;
 }
 
 const Context = createContext<TwitchAuthContext | null>(null);
@@ -80,6 +81,10 @@ export const TwitchAuthProvider = ({
     window.location.replace(loginUrl.toString());
   }, [clientId, scopes]);
 
+  const logout = useCallback(() => {
+    setAccessToken(null);
+  }, []);
+
   return (
     <Context.Provider
       value={{
@@ -88,6 +93,7 @@ export const TwitchAuthProvider = ({
         error,
         isAuthenticated,
         goToLogin,
+        logout,
       }}
     >
       {children}

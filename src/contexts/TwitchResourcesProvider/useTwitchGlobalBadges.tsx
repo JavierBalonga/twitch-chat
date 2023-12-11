@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { useTwitchAuth } from "../../contexts/TwitchAuthProvider";
 import twitchApi from "./twitchApi";
+import { AxiosError } from "axios";
 
 // TODO This hook is not used anywhere in the app.
 // Will be used in the future to display the channel badges when there is almost one.
@@ -43,27 +44,37 @@ const useTwitchGlobalBadges = () => {
     queryKey: "twitch-global-badges",
     enabled: twitchAuth.isAuthenticated && Boolean(twitchAuth.accessToken),
     queryFn: async () => {
-      if (!twitchAuth.accessToken) {
-        throw new Error("No Twitch access token found");
-      }
-      const { data } = await twitchApi.get<TwitchGlobalBadgesResponse>(
-        "/chat/badges/global",
-        {
-          headers: {
-            Authorization: `Bearer ${twitchAuth.accessToken}`,
-          },
+      try {
+        if (!twitchAuth.accessToken) {
+          throw new Error("No Twitch access token found");
         }
-      );
-      const badges: TwitchGlobalBadges = {};
-      data.data.forEach((badge) => {
-        if (!badges[badge.set_id]) {
-          badges[badge.set_id] = {};
-        }
-        badge.versions.forEach((version) => {
-          badges[badge.set_id][version.id] = version;
+        const { data } = await twitchApi.get<TwitchGlobalBadgesResponse>(
+          "/chat/badges/global",
+          {
+            headers: {
+              Authorization: `Bearer ${twitchAuth.accessToken}`,
+            },
+          }
+        );
+        const badges: TwitchGlobalBadges = {};
+        data.data.forEach((badge) => {
+          if (!badges[badge.set_id]) {
+            badges[badge.set_id] = {};
+          }
+          badge.versions.forEach((version) => {
+            badges[badge.set_id][version.id] = version;
+          });
         });
-      });
-      return badges;
+        return badges;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status === 401) {
+            twitchAuth.logout();
+            twitchAuth.goToLogin();
+          }
+        }
+        throw error;
+      }
     },
   });
 };

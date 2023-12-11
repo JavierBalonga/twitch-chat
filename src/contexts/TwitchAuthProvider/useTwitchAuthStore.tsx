@@ -22,7 +22,7 @@ const useTwitchAuthStore = create(
       accessToken: null,
       setAccessToken: (accessToken: string | null) => set({ accessToken }),
     }),
-    { name: "twitch-auth", version: 2 }
+    { name: "twitch-auth", version: 3 }
   )
 );
 
